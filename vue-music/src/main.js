@@ -3,12 +3,17 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import fastClick from 'fastclick'
-
-Vue.config.productionTip = false
+import VueLazyLoad from 'vue-lazyload'
 
 import 'common/stylus/index.styl'
+
+Vue.config.productionTip = false
 /* 解决移动端点击三百毫秒的延迟 */
 fastClick.attach(document.body)
+
+Vue.use(VueLazyLoad, {
+  loading: require('common/image/default.png')
+})
 
 /* eslint-disable no-new */
 new Vue({
