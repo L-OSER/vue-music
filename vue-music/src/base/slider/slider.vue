@@ -44,15 +44,21 @@ export default {
         this._play()
       }
     }, 20)
-  //  浏览器刷新时间为17ms,20ms初始化比较科学
-  //  获取异步图片链接时,要先判断,加载完图片才能使用slider组件 v-if
+    //  浏览器刷新时间为17ms,20ms初始化比较科学
+    //  获取异步图片链接时,要先判断,加载完图片才能使用slider组件 v-if
+
+    window.addEventListener('resize', () => {
+      if (!this.slider) {
+        return
+      }
+      this._setSliderWidth(true)
+    })
   },
   methods: {
-    _setSliderWidth() {
+    _setSliderWidth(isResize) {
       // 获取轮播子元素
       this.children = this.$refs.sliderGroup.children
       let width = 0
-
       // 获取父元素宽度
       let sliderWidth = this.$refs.slider.clientWidth
 
@@ -65,9 +71,8 @@ export default {
         child.style.width = sliderWidth + 'px'
         width += sliderWidth
       }
-
-      // 如果是循环,轮播组件增加两个子元素的宽度
-      if (this.loop) {
+      // 如果是循环,轮播组件增加两个子元素的宽度,再次加载则已经加了两个,跳过增加
+      if (this.loop && !isResize) {
         width += 2 * sliderWidth
       }
       this.$refs.sliderGroup.style.width = width + 'px'
@@ -85,8 +90,7 @@ export default {
         snap: true,
         snapLoop: this.loop,
         snapThreshold: 0.3,
-        snapSpeed: 400,
-        click: true
+        snapSpeed: 400
       })
 
       // 匹配相对于的轮播点和轮播图位置
@@ -112,6 +116,9 @@ export default {
         this.slider.goToPage(pageIndex, 0, 400)
       }, this.interval)
     }
+  },
+  destroyed() {
+    clearTimeout(this.timer)
   }
 }
 </script>
