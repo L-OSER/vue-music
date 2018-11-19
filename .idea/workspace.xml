@@ -2,16 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="60a6fa57-139a-4482-bc7e-317685639123" name="默认" comment="">
-      <change afterPath="$PROJECT_DIR$/vue-music/src/api/singer.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vue-music/src/base/listview/listview.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue-music/node_modules/jsonp/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/vue-music/node_modules/jsonp/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue-music/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/vue-music/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue-music/src/base/scroll/scroll.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue-music/src/base/scroll/scroll.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue-music/src/common/js/dom.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue-music/src/common/js/dom.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue-music/src/common/js/singer.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue-music/src/common/js/singer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue-music/src/components/recommend/recommend.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue-music/src/components/recommend/recommend.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue-music/src/components/singer/singer.vue" beforeDir="false" afterPath="$PROJECT_DIR$/vue-music/src/components/singer/singer.vue" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -92,8 +83,8 @@
       <file leaf-file-name="listview.vue" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/vue-music/src/base/listview/listview.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="154">
-              <caret line="13" column="42" selection-start-line="13" selection-start-column="32" selection-end-line="13" selection-end-column="42" />
+            <state relative-caret-position="374">
+              <caret line="29" column="18" selection-start-line="29" selection-start-column="18" selection-end-line="29" selection-end-column="18" />
               <folding>
                 <element signature="e#683#722#0" expanded="true" />
               </folding>
@@ -332,12 +323,12 @@
       <updated>1542078853720</updated>
       <workItem from="1542078856278" duration="8242000" />
       <workItem from="1542158836704" duration="53000" />
-      <workItem from="1542332659037" duration="15813000" />
+      <workItem from="1542332659037" duration="16595000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="24108000" />
+    <option name="totallyTimeSpent" value="24890000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -606,8 +597,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/vue-music/src/base/listview/listview.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="13" column="42" selection-start-line="13" selection-start-column="32" selection-end-line="13" selection-end-column="42" />
+        <state relative-caret-position="374">
+          <caret line="29" column="18" selection-start-line="29" selection-start-column="18" selection-end-line="29" selection-end-column="18" />
           <folding>
             <element signature="e#683#722#0" expanded="true" />
           </folding>
