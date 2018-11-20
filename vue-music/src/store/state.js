@@ -2,4 +2,4 @@ const state = {
   singer: {}
 }
 
-export default {}
+export default state
