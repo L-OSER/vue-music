@@ -12,7 +12,6 @@
       </ul>
     </div>
 </template>
-<!-- 3. -->
 <script>
 export default {
   props: {
