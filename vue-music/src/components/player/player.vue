@@ -1,21 +1,27 @@
 <template>
   <div class="player" v-show="playlist.length>0">
+    <transition name="normal"
+                @enter="enter"
+                @after-enter="afterEnter"
+                @leave="leave"
+                @after-leave="leaverEnter"
+    >
       <div class="normal-player" v-show="fullScreen">
         <div class="background">
-          <img width="100%" height="100%">
+          <img width="100%" height="100%" :src="currentSong.image">
         </div>
         <div class="top">
-          <div class="back">
+          <div class="back" @click="back">
             <i class="icon-back"></i>
           </div>
-          <h1 class="title"></h1>
-          <h2 class="subtitle"></h2>
+          <h1 class="title" v-html="currentSong.name"></h1>
+          <h2 class="subtitle" v-html="currentSong.singer"></h2>
         </div>
         <div class="middle">
           <div class="middle-l" >
             <div class="cd-wrapper" >
               <div class="cd" >
-                <img class="image">
+                <img class="image"  :src="currentSong.image">
               </div>
             </div>
           </div>
@@ -29,7 +35,7 @@
               <i class="icon-prev"></i>
             </div>
             <div class="icon i-center" >
-              <i></i>
+              <i class="icon-play"></i>
             </div>
             <div class="icon i-right" >
               <i class="icon-next"></i>
@@ -40,13 +46,15 @@
           </div>
         </div>
       </div>
-      <div class="mini-player" >
+    </transition>
+    <transition name="mini">
+      <div class="mini-player" v-show="!fullScreen" @click="open">
         <div class="icon">
-          <img  width="40" height="40" >
+          <img  width="40" height="40" :src="currentSong.image">
         </div>
         <div class="text">
-          <h2 class="name"></h2>
-          <p class="desc"></p>
+          <h2 class="name" v-html="currentSong.name"></h2>
+          <p class="desc" v-html="currentSong.singer"></p>
         </div>
         <div class="control">
         </div>
@@ -54,18 +62,42 @@
           <i class="icon-playlist"></i>
         </div>
       </div>
+    </transition>
  </div>
 </template>
 
 <script type="text/ecmascript-6">
-import {mapGetters} from 'vuex'
+import {mapGetters, mapMutations} from 'vuex'
+import animations from 'create-keyframe-animation'
 
 export default {
   computed: {
     ...mapGetters([
       'fullScreen',
-      'playlist'
+      'playlist',
+      'currentSong'
     ])
+  },
+  methods: {
+    back() {
+      this.setFullScreen(false)
+    },
+    open() {
+      this.setFullScreen(true)
+    },
+    enter(el, done) {
+
+    },
+    alterEnter() {
+
+    },
+    leave(el, done) {
+    },
+    alterLeave() {
+    },
+    ...mapMutations({
+      setFullScreen : 'SET_FULL_SCREEN'
+    })
   }
 }
 </script>
