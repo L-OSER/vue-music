@@ -32,13 +32,13 @@
               <i class="icon-sequence"></i>
             </div>
             <div class="icon i-left">
-              <i class="icon-prev"></i>
+              <i @click="prev" class="icon-prev"></i>
             </div>
             <div class="icon i-center" >
               <i @click="togglePlaying" :class="playIcon"></i>
             </div>
             <div class="icon i-right" >
-              <i class="icon-next"></i>
+              <i @click="next" class="icon-next"></i>
             </div>
             <div class="icon i-right">
               <i class="icon icon-not-favorite"></i>
@@ -64,7 +64,7 @@
         </div>
       </div>
     </transition>
-    <audio ref="audio" :src="currentSong.url"></audio>
+    <audio ref="audio" :src="currentSong.url" @canplay="ready" @error="error"></audio>
  </div>
 </template>
 
@@ -76,6 +76,11 @@ import {prefixStyle} from 'common/js/dom'
 const transform = prefixStyle('transform')
 
 export default {
+  data() {
+    return {
+      songReady: false
+    }
+  },
   computed: {
     cdCls() {
       return this.playing ? 'play' : 'play-pause'
@@ -90,7 +95,8 @@ export default {
       'fullScreen',
       'playlist',
       'currentSong',
-      'playing'
+      'playing',
+      'currentIndex'
     ])
   },
   methods: {
@@ -140,7 +146,46 @@ export default {
       this.$refs.cdWrapper.style[transform] = ''
     },
     togglePlaying() {
+      // 禁止连续切换歌曲
+      if (!this.songReady) {
+        return
+      }
       this.setPlayingState(!this.playing)
+    },
+    // 下一首
+    next() {
+      if (!this.songReady) {
+        return
+      }
+      let index = this.currentIndex + 1
+      if (index === this.playlist.length) {
+        index = 0
+      }
+      this.setCurrentIndex(index)
+      if (!this.playing) {
+        this.togglePlaying()
+      }
+      this.songReady = false
+    },
+    // 上一首
+    prev() {
+      if (!this.songReady) {
+        return
+      }
+      let index = this.currentIndex - 1
+      if (index === -1) {
+        index = this.playlist.length - 1
+      }
+      this.setCurrentIndex(index)
+      if (!this.playing) {
+        this.togglePlaying()
+      }
+      this.songReady = false
+    },
+    ready() {
+      this.songReady = true
+    },
+    error() {
     },
     _getPosAndScale() {
       const targetWidth = 40
@@ -158,8 +203,9 @@ export default {
       }
     },
     ...mapMutations({
-      setFullScreen : 'SET_FULL_SCREEN',
-      setPlayingState: 'SET_PLAYING_STATE'
+      setFullScreen: 'SET_FULL_SCREEN',
+      setPlayingState: 'SET_PLAYING_STATE',
+      setCurrentIndex: 'SET_CURRENT_INDEX'
     })
   },
   watch: {
