@@ -3,15 +3,15 @@ function getRandomInt(min, max) {
 }
 
 export function shuffle(arr) {
-  for (let i = 0; i < arr.length; i++) {
+  let _arr = arr.slice()
+  for (let i = 0; i < _arr.length; i++) {
     let j = getRandomInt(0, i)
     // 获取0-i的随机数
-    let t = arr[i]
-    arr[i] = arr[j]
-    // arr[i] = 随机数的元素
-    arr[j] = t
-  //  arr[j] = arr[i] 随机数的元素替换
+    let t = _arr[i]
+    _arr[i] = _arr[j]
+    // _arr[i] = 随机数的元素
+    _arr[j] = t
+  //  _arr[j] = _arr[i] 随机数的元素替换
   }
-  console.log(arr)
-  return arr
+  return _arr
 }

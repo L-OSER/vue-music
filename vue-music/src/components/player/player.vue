@@ -75,7 +75,11 @@
         </div>
       </div>
     </transition>
-    <audio ref="audio" @timeupdate="updateTime" :src="currentSong.url" @canplay="ready" @error="error"></audio>
+    <audio ref="audio" @timeupdate="updateTime" :src="currentSong.url"
+           @canplay="ready"
+           @error="error"
+           @ended="end"
+    ></audio>
  </div>
 </template>
 
@@ -180,6 +184,19 @@ export default {
       }
       this.setPlayingState(!this.playing)
     },
+    // 歌曲播放完毕
+    end() {
+      // 判断是否循环播放
+      if (this.mode === playMode.loop) {
+        this.loop()
+      } else {
+        this.next()
+      }
+    },
+    loop() {
+      this.$refs.audio.currentTime = 0
+      this.$refs.audio.play()
+    },
     // 下一首
     next() {
       if (!this.songReady) {
@@ -245,6 +262,7 @@ export default {
       this.resetCurrentIndex(list)
       this.setPlaylist(list)
     },
+    // 获取歌曲index值
     resetCurrentIndex(list) {
       let index = list.findIndex((item) => {
         return item.id === this.currentSong.id
