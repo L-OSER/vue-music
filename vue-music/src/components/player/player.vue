@@ -271,7 +271,7 @@ export default {
       })
       this.setCurrentIndex(index)
     },
-    getLyric() {
+    getLyric_data() {
       this.currentSong.getLyric().then((lyric) => {
         this.currentLyric = new Lyric(lyric)
         console.log(this.currentLyric)
@@ -316,7 +316,7 @@ export default {
       }
       this.$nextTick(() => {
         this.$refs.audio.play()
-        this.getLyric()
+        this.getLyric_data()
       })
     },
     playing(newPlaying) {
