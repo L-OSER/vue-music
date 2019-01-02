@@ -17,12 +17,19 @@
           <h1 class="title" v-html="currentSong.name"></h1>
           <h2 class="subtitle" v-html="currentSong.singer"></h2>
         </div>
-        <div class="middle">
-          <div class="middle-l" >
+        <div class="middle"
+             @touchstart.prevent="middleTouchStart"
+             @touchmove.prevent="middleTouchMove"
+             @touchend.prevent="middleTouchEnd"
+        >
+          <div class="middle-l" ref="middleL">
             <div class="cd-wrapper" ref="cdWrapper">
               <div class="cd" :class="cdCls">
                 <img class="image" :src="currentSong.image">
               </div>
+            </div>
+            <div class="playing-lyric-wrapper">
+              <div class="playing-lyric">{{playingLyric}}</div>
             </div>
           </div>
           <scroll class="middle-r" ref="lyricList" :data="currentLyric && currentLyric.lines">
@@ -34,6 +41,10 @@
           </scroll>
         </div>
         <div class="bottom">
+          <div class="dot-wrapper">
+            <span class="dot" :class="{'active':currentShow === 'cd'}"></span>
+            <span class="dot" :class="{'active':currentShow === 'lyric'}"></span>
+          </div>
           <div class="progress-wrapper">
             <span class="time time-l">{{format(currentTime)}}</span>
             <div class="progress-bar-wrapper">
@@ -102,6 +113,7 @@ import Lyric from 'lyric-parser'
 import Scroll from 'base/scroll/scroll'
 
 const transform = prefixStyle('transform')
+const transitionDuration = prefixStyle('transitionDuration')
 
 export default {
   data() {
@@ -110,7 +122,9 @@ export default {
       currentTime: 0,
       radius: 32,
       currentLyric: null,
-      currentLineNum: 0
+      currentLineNum: 0,
+      currentShow: 'cd',
+      playingLyric: ''
     }
   },
   computed: {
@@ -141,6 +155,9 @@ export default {
       'mode',
       'sequenceList'
     ])
+  },
+  created() {
+    this.touch = {}
   },
   methods: {
     back() {
@@ -194,6 +211,9 @@ export default {
         return
       }
       this.setPlayingState(!this.playing)
+      if (this.currentLyric) {
+        this.currentLyric.togglePlay()
+      }
     },
     // 歌曲播放完毕
     end() {
@@ -207,6 +227,10 @@ export default {
     loop() {
       this.$refs.audio.currentTime = 0
       this.$refs.audio.play()
+      if (this.currentLyric) {
+        // 设置歌词偏移时间
+        this.currentLyric.seek(0)
+      }
     },
     // 下一首
     next() {
@@ -254,11 +278,15 @@ export default {
       return `${minute}:${second}`
     },
     onProgressBarChange(percent) {
+      const currentTime = this.currentSong.duration * percent
       // 拖动进度条
-      this.$refs.audio.currentTime = this.currentSong.duration * percent
+      this.$refs.audio.currentTime = currentTime
       // 判断是否播放
       if (!this.playing) {
         this.togglePlaying()
+      }
+      if (this.currentLyric) {
+        this.currentLyric.seek(currentTime * 1000)
       }
     },
     changeMode: function () {
@@ -287,6 +315,11 @@ export default {
         if (this.playing) {
           this.currentLyric.play()
         }
+      }).catch(() => {
+        // 如果没有歌词
+        this.currentLyric = null
+        this.playingLyric = ''
+        this.currentLineNum = 0
       })
     },
     handleLyric({lineNum, txt}) {
@@ -294,11 +327,80 @@ export default {
       console.log(lineNum)
       if (lineNum > 5) {
         let lineEl = this.$refs.lyricLine[lineNum - 5]
-        console.log(lineEl)
         this.$refs.lyricList.scrollToElement(lineEl, 1000)
       } else {
         this.$refs.lyricList.scrollTo(0, 0, 1000)
       }
+      this.playingLyric = txt
+    },
+    // 滑动左右,显示cd或者歌词页面
+    middleTouchStart(e) {
+      // 变量
+      this.touch.initiated = true;
+      // 获取 touch 事件
+      const touch = e.touches[0]
+      // 刚点击的位置
+      this.touch.startX = touch.pageX
+      this.touch.startY = touch.pageY
+    },
+    middleTouchMove(e) {
+      if (!this.touch.initiated) {
+        return
+      }
+      const touch = e.touches[0]
+      // touch.pageX 滑动的位置变化
+      // deltaX 滑动的位置减去刚开始点击的位置 = -滑动的距离
+      const deltaX = touch.pageX - this.touch.startX
+      const deltaY = touch.pageY - this.touch.startY
+      // 如果纵轴滚动偏差大于横轴滚动偏差则不做处理
+      if (Math.abs(deltaY) > Math.abs(deltaX)) {
+          return
+      }
+      // 如果是cd页面,则为0,否则为歌词页面,-的页面宽度
+      const left = this.currentShow === 'cd' ? 0 : -window.innerWidth
+      // max()> 最大不能超过-的页面宽度, -页面的宽度加滑动的距离
+      // min()> 向右滑动最小不能小于0
+      const offsetWidth = Math.min(0 , Math.max(-window.innerWidth, left + deltaX))
+      // 获取滑动百分比,屏幕距离 除以屏幕宽度
+      this.touch.percent = Math.abs(offsetWidth / window.innerWidth)
+      this.$refs.lyricList.$el.style[transform] = `translate3d(${offsetWidth}px,0,0)`
+      // 动画效果
+      this.$refs.lyricList.$el.style[transitionDuration] = 0
+      // 如果百分比越大,透明度越小,反之
+      this.$refs.middleL.style.opacity = 1 - this.touch.percent
+      this.$refs.middleL.style[transitionDuration] = 0
+
+    },
+    middleTouchEnd(e) {
+      let offsetWidth
+      let opacity
+      if (this.currentShow === 'cd') {
+        // 从右往左滑动百分20,
+        if (this.touch.percent > 0.2) {
+          offsetWidth = -window.innerWidth
+          this.currentShow = 'lyric'
+          opacity = 0
+        } else {
+          offsetWidth = 0
+          opacity = 1
+        }
+      } else {
+        // 从左往右滑动白分20,因为从左往右滑动,pageX是递增状态,除以屏幕,所以是80%
+        if (this.touch.percent < 0.8) {
+          offsetWidth = 0
+          this.currentShow = 'cd'
+          opacity = 1
+        } else {
+          offsetWidth = -window.innerWidth
+          opacity = 0
+        }
+      }
+      this.$refs.lyricList.$el.style[transform] = `translate3d(${offsetWidth}px,0,0)`
+      const time = 300
+      this.$refs.lyricList.$el.style[transitionDuration] = `${time}ms`
+      // 如果百分比越大,透明度越小,反之
+      this.$refs.middleL.style.opacity = opacity
+      this.$refs.middleL.style[transitionDuration] = `${time}ms`
     },
     _pad(num, n = 2) {
       let len = num.toString().length
@@ -335,6 +437,9 @@ export default {
     currentSong(newSong, oldSong) {
       if (newSong.id === oldSong.id) {
         return
+      }
+      if (this.currentLyric) {
+        this.currentLyric.stop()
       }
       this.$nextTick(() => {
         this.$refs.audio.play()
