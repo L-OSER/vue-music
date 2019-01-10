@@ -224,7 +224,6 @@ export default {
         this.next()
       }
     },
-    // 重新播放
     loop() {
       this.$refs.audio.currentTime = 0
       this.$refs.audio.play()
@@ -238,18 +237,13 @@ export default {
       if (!this.songReady) {
         return
       }
-      // 处理歌曲列表只有1条歌曲的时候
-      if (this.playlist.length === 1) {
-        this.loop()
-      } else {
-        let index = this.currentIndex + 1
-        if (index === this.playlist.length) {
-          index = 0
-        }
-        this.setCurrentIndex(index)
-        if (!this.playing) {
-          this.togglePlaying()
-        }
+      let index = this.currentIndex + 1
+      if (index === this.playlist.length) {
+        index = 0
+      }
+      this.setCurrentIndex(index)
+      if (!this.playing) {
+        this.togglePlaying()
       }
       this.songReady = false
     },
@@ -258,17 +252,13 @@ export default {
       if (!this.songReady) {
         return
       }
-      if (this.playlist.length === 1) {
-        this.loop()
-      } else {
-        let index = this.currentIndex - 1
-        if (index === -1) {
-          index = this.playlist.length - 1
-        }
-        this.setCurrentIndex(index)
-        if (!this.playing) {
-          this.togglePlaying()
-        }
+      let index = this.currentIndex - 1
+      if (index === -1) {
+        index = this.playlist.length - 1
+      }
+      this.setCurrentIndex(index)
+      if (!this.playing) {
+        this.togglePlaying()
       }
       this.songReady = false
     },
@@ -333,18 +323,14 @@ export default {
       })
     },
     handleLyric({lineNum, txt}) {
-      // lineNum 当前第几条歌词
       this.currentLineNum = lineNum
+      console.log(lineNum)
       if (lineNum > 5) {
-        // 获取lineNum-5的第几个p元素
         let lineEl = this.$refs.lyricLine[lineNum - 5]
-        // 滚动到lineNum-5的第几个p元素的高度
         this.$refs.lyricList.scrollToElement(lineEl, 1000)
       } else {
-        // 否则滚动到顶部
         this.$refs.lyricList.scrollTo(0, 0, 1000)
       }
-      // 获取cd上的
       this.playingLyric = txt
     },
     // 滑动左右,显示cd或者歌词页面
@@ -368,7 +354,7 @@ export default {
       const deltaY = touch.pageY - this.touch.startY
       // 如果纵轴滚动偏差大于横轴滚动偏差则不做处理
       if (Math.abs(deltaY) > Math.abs(deltaX)) {
-        return
+          return
       }
       // 如果是cd页面,则为0,否则为歌词页面,-的页面宽度
       const left = this.currentShow === 'cd' ? 0 : -window.innerWidth
@@ -455,11 +441,10 @@ export default {
       if (this.currentLyric) {
         this.currentLyric.stop()
       }
-      // 如果从微信播放,切换到后台,js是不会执行的,延时1秒保证后台切换到前台能执行
-      setTimeout(() => {
+      this.$nextTick(() => {
         this.$refs.audio.play()
         this.getLyric()
-      }, 1000)
+      })
     },
     playing(newPlaying) {
       this.$nextTick(() => {
