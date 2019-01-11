@@ -354,7 +354,7 @@ export default {
       const deltaY = touch.pageY - this.touch.startY
       // 如果纵轴滚动偏差大于横轴滚动偏差则不做处理
       if (Math.abs(deltaY) > Math.abs(deltaX)) {
-          return
+        return
       }
       // 如果是cd页面,则为0,否则为歌词页面,-的页面宽度
       const left = this.currentShow === 'cd' ? 0 : -window.innerWidth

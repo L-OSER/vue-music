@@ -16,6 +16,8 @@ export const currentSong = (state) => {
   return state.playlist[state.currentIndex] || {}
 }
 
+export const disc = state => state.disc
+
 /*
 ES6标准新增了一种新的函数：Arrow Function（箭头函数）。
 
