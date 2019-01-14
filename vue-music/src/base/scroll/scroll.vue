@@ -24,6 +24,11 @@ export default {
     listenScroll: {
       type: Boolean,
       default: false
+    },
+    // 上拉刷新
+    pullup: {
+      type: Boolean,
+      default: false
     }
   },
   mounted() {
@@ -49,6 +54,14 @@ export default {
           me.$emit('scroll', pos)
         })
       }
+      // 上拉刷新
+      if (this.pullup) {
+        this.scroll.on('scrollEnd', () => {
+          if (this.scroll.y <= (this.scroll.maxScrollY + 50)) {
+            this.$emit('scrollToEnd')
+          }
+        })
+      }
     },
     enable() {
       this.scroll && this.scroll.enable()
@@ -56,9 +69,11 @@ export default {
     disable() {
       this.scroll && this.scroll.disable()
     },
+    // 重置滚动条
     refresh() {
       this.scroll && this.scroll.refresh()
     },
+    // 设置滚动位置
     scrollTo() {
       this.scroll && this.scroll.scrollTo.apply(this.scroll, arguments)
     },

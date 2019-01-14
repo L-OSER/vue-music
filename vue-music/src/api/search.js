@@ -38,7 +38,7 @@ export function search(query, page, zhida) {
 */
 export function search(query, page, zhida, perpage) {
   // const url = 'https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp'
-  const url = '/api/search' //在webpack.dev.config启用了代理跨域
+  const url = '/api/search' // 在webpack.dev.config启用了代理跨域
   const data = Object.assign({}, commonParams, {
     g_tk: 5381,
     uin: 0,
@@ -56,8 +56,8 @@ export function search(query, page, zhida, perpage) {
     ie: 'utf-8',
     sem: 1,
     aggr: 0,
-    perpage: perpage,
-    n: 20,
+    perpage,
+    n: perpage,
     p: page,
     remoteplace: 'txt.mqq.all',
     _: 1537612841753
