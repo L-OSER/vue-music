@@ -89,7 +89,7 @@ export default {
         index
       })
     },
-    random() {
+    random: function () {
       this.randomPlay({list: this.songs})
     },
     ...mapActions([

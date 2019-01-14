@@ -6,7 +6,7 @@
           @scrollToEnd="searchMore"
   >
     <ul class="suggest-list">
-      <li class="suggest-item" v-for="(item, index) in result" :key="index">
+      <li @click="selectItem(item)" class="suggest-item" v-for="(item, index) in result" :key="index">
         <div class="icon">
           <i :class="getIconCls(item)"></i>
         </div>
@@ -25,6 +25,8 @@ import {search} from 'api/search'
 import {ERR_OK} from 'api/config'
 import {createSong} from 'common/js/song'
 import Loading from 'base/loading/loading'
+import Singer from 'common/js/singer'
+import {mapMutations} from 'vuex'
 
 const TYPE_SINGER = 'singer'
 const perpage = 20
@@ -90,6 +92,20 @@ export default {
         // return ''
       }
     },
+    // 跳转二级路由
+    selectItem(item) {
+      // 如果是歌手
+      if (item.type === TYPE_SINGER) {
+        const singer = new Singer({
+          id: item.singermid,
+          name: item.singername
+        })
+        this.$router.push({
+          path: `/search/${singer.id}`
+        })
+        this.setSinger(singer)
+      }
+    },
     // 检查是否还有数据可以加载
     _checkMore(data) {
       const song = data.song
@@ -116,7 +132,10 @@ export default {
         }
       })
       return ret
-    }
+    },
+    ...mapMutations({
+      setSinger: 'SET_SINGER'
+    })
   },
   watch: {
     query() {
