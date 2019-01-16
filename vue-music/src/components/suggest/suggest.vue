@@ -22,11 +22,12 @@
 <script type="text/ecmascript-6">
 import Scroll from 'base/scroll/scroll'
 import {search} from 'api/search'
+import {getMusic} from 'api/singer'
 import {ERR_OK} from 'api/config'
 import {createSong} from 'common/js/song'
 import Loading from 'base/loading/loading'
 import Singer from 'common/js/singer'
-import {mapMutations} from 'vuex'
+import {mapMutations, mapActions} from 'vuex'
 
 const TYPE_SINGER = 'singer'
 const perpage = 20
@@ -72,7 +73,7 @@ export default {
       search(this.query, this.page, this.showSinger, perpage).then((res) => {
         if (res.code === ERR_OK) {
           this.result = this.result.concat(this._genResult(res.data))
-          this._checkMore(res.data)
+          console.log(this._genResult(res.data))
         }
       })
     },
@@ -104,6 +105,14 @@ export default {
           path: `/search/${singer.id}`
         })
         this.setSinger(singer)
+      } else {
+        getMusic(item.mid).then((res) => {
+          const svley = res.data.items[0]
+          const songVkey = svley['vkey']
+          console.log(item)
+          console.log(createSong(item, songVkey, 'search'))
+          this.insertSong(createSong(item, songVkey, 'search'))
+        })
       }
     },
     // 检查是否还有数据可以加载
@@ -126,8 +135,18 @@ export default {
     },
     _normalizeSongs(list) {
       let ret = []
+      /*   list.forEach((musicData) => {
+        if (musicData.songid && musicData.albummid) {
+          getMusic(musicData.songmid).then((res) => {
+            const svley = res.data.items[0]
+            const songVkey = svley['vkey']
+            ret.push(createSong(musicData, songVkey))
+          })
+        }
+      }) */
       list.forEach((musicData) => {
-        if (musicData.songid && musicData.albumid) {
+        if (musicData.songid && musicData.albummid) {
+          console.log()
           ret.push(createSong(musicData))
         }
       })
@@ -135,7 +154,10 @@ export default {
     },
     ...mapMutations({
       setSinger: 'SET_SINGER'
-    })
+    }),
+    ...mapActions([
+      'insertSong'
+    ])
   },
   watch: {
     query() {

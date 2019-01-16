@@ -46,8 +46,9 @@ export const randomPlay = function (commit, list) {
 }
 
 export const insertSong = function ({commit, state}, song) {
-  let playlist = state.playlist
-  let sequenceList = state.sequenceList
+  // 直接拷贝playlist,不要直接修改state
+  let playlist = state.playlist.slice()
+  let sequenceList = state.sequenceList.slice()
   let currentIndex = state.currentIndex
   //  记录当前歌曲
   let currentSong = playlist[currentIndex]
@@ -85,6 +86,7 @@ export const insertSong = function ({commit, state}, song) {
 
   commit(types.SET_PLAYLIST, playlist)
   commit(types.SET_SEQUENCE_LIST, sequenceList)
+  commit(types.SET_CURRENT_INDEX, currentIndex)
   commit(types.SET_FULL_SCREEN, true)
   commit(types.SET_PLAYING_STATE, true)
 }

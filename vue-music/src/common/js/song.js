@@ -45,7 +45,19 @@ export default class Song {
 //   })
 // }
 
-export function createSong(musicData, songVkey) {
+export function createSong(musicData, songVkey,type) {
+  if (type === 'search') {
+    return new Song({
+      id: musicData.id,
+      mid: musicData.mid,
+      singer: filterSinger(musicData.singer),
+      name: musicData.name,
+      album: musicData.album,
+      duration: musicData.duration,
+      image: musicData.image,
+      url: `http://dl.stream.qqmusic.qq.com/C400${musicData.mid}.m4a?vkey=${songVkey}&guid=7981028948&uin=0&fromtag=66`
+    })
+  }
   return new Song({
     id: musicData.songid,
     mid: musicData.songmid,
@@ -63,8 +75,11 @@ function filterSinger(singer) {
   if (!singer) {
     return ''
   }
-  singer.forEach((s) => {
-    ret.push(s.name)
-  })
-  return ret.join('/')
+  if (singer.constructor === Array) {
+    singer.forEach((s) => {
+      ret.push(s.name)
+    })
+    return ret.join('/')
+  }
+  return singer
 }
