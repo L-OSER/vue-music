@@ -8,9 +8,11 @@ function findIndex(list, song) {
   })
 }
 export const selectPlay = function ({commit, state}, {list, index}) {
+  // SET_SEQUENCE_LIST歌曲列表
   commit(types.SET_SEQUENCE_LIST, list)
   if (state.mode === playMode.random) {
     let randomList = shuffle(list)
+    // SET_PLAYLIST 正在播放的歌曲列表。可以做处理的，比如随机
     commit(types.SET_PLAYLIST, randomList)
     index = findIndex(randomList, list[index])
   } else {
@@ -54,7 +56,7 @@ export const insertSong = function ({commit, state}, song) {
   let fpIndex = findIndex(playlist, song)
   // 因为插入歌曲,所以索引+1
   currentIndex++
-  // 在当前索引的下一个插入一条歌
+  // 插入这首歌到当前索引位置
   playlist.splice(currentIndex, 0, song)
   // 如果已经包含了这首歌
   if (fpIndex > -1) {
@@ -66,4 +68,23 @@ export const insertSong = function ({commit, state}, song) {
       playlist.splice(fpIndex + 1, 1)
     }
   }
+
+  let currentSIndex = findIndex(sequenceList, currentSong) + 1
+
+  let fsIndex = findIndex(sequenceList, song)
+
+  sequenceList.splice(currentSIndex, 0, song)
+
+  if (fsIndex > -1) {
+    if (currentSIndex > fsIndex) {
+      sequenceList.splice(fsIndex, 1)
+    } else {
+      sequenceList.splice(fsIndex + 1, 1)
+    }
+  }
+
+  commit(types.SET_PLAYLIST, playlist)
+  commit(types.SET_SEQUENCE_LIST, sequenceList)
+  commit(types.SET_FULL_SCREEN, true)
+  commit(types.SET_PLAYING_STATE, true)
 }
