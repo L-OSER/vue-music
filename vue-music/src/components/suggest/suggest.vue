@@ -73,7 +73,6 @@ export default {
       search(this.query, this.page, this.showSinger, perpage).then((res) => {
         if (res.code === ERR_OK) {
           this.result = this.result.concat(this._genResult(res.data))
-          console.log(this._genResult(res.data))
         }
       })
     },
