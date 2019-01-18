@@ -27,6 +27,10 @@ export default {
     },
     setQuery(query) {
       this.query = query
+    },
+    // 往search派发一个事件
+    blur () {
+      this.$refs.query.blur()
     }
   },
   created() {

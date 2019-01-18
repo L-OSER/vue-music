@@ -26,7 +26,6 @@ export function debounce(func, delay) {
       clearTimeout(timer)
     }
     timer = setTimeout(() => {
-      console.log(func)
       func.apply(this, args)
     }, delay)
   }

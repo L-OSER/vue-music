@@ -2,8 +2,10 @@
   <scroll ref="suggest"
           :data="result"
           :pullup="pullup"
+          :beforeScroll="beforeScroll"
           class="suggest"
           @scrollToEnd="searchMore"
+          @beforeScroll="listScroll"
   >
     <ul class="suggest-list">
       <li @click="selectItem(item)" class="suggest-item" v-for="(item, index) in result" :key="index">
@@ -52,7 +54,8 @@ export default {
       page: 1,
       result: [],
       pullup: true,
-      hasMore: true
+      hasMore: true,
+      beforeScroll: true
     }
   },
   methods: {
@@ -117,6 +120,10 @@ export default {
           this.insertSong(createSong(item, songVkey, 'search'))
         })
       }
+    },
+    listScroll() {
+      // 往search提交一个listScroll事件
+      this.$emit('listScroll')
     },
     // 检查是否还有数据可以加载
     _checkMore(data) {
