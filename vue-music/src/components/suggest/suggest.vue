@@ -115,8 +115,6 @@ export default {
         getMusic(item.mid).then((res) => {
           const svley = res.data.items[0]
           const songVkey = svley['vkey']
-          console.log(item)
-          console.log(createSong(item, songVkey, 'search'))
           this.insertSong(createSong(item, songVkey, 'search'))
         })
       }

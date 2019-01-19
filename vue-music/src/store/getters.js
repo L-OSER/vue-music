@@ -19,6 +19,9 @@ export const currentSong = (state) => {
 export const disc = state => state.disc
 
 export const topList = state => state.topList
+
+export const searchHistory = state => state.searchHistory
+
 /*
 ES6标准新增了一种新的函数：Arrow Function（箭头函数）。
 
