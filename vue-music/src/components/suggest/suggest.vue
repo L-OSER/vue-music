@@ -118,6 +118,7 @@ export default {
           this.insertSong(createSong(item, songVkey, 'search'))
         })
       }
+      this.$emit('select')
     },
     listScroll() {
       // 往search提交一个listScroll事件
