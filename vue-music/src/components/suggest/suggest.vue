@@ -120,6 +120,9 @@ export default {
       }
       this.$emit('select')
     },
+    refresh() {
+      this.$refs.suggest.refresh()
+    },
     listScroll() {
       // 往search提交一个listScroll事件
       this.$emit('listScroll')
