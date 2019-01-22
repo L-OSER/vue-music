@@ -67,7 +67,6 @@ export default {
   methods: {
     handlePlaylist(playlist) {
       const bottom = playlist.length > 0 ? '60px' : ''
-      console.log(bottom)
       this.$refs.searchResult.style.bottom = bottom
       this.$refs.suggest.refresh()
 
