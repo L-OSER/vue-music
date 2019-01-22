@@ -102,6 +102,35 @@ export const deleteSearchHistory = function ({commit}, query) {
   commit(types.SET_SEARCH_HISTORY, deleteSearch(query))
 }
 
+// 清缓存
 export const clearSearchHistory = function ({commit}) {
   commit(types.SET_SEARCH_HISTORY, clearSearch())
+}
+// 删除歌曲
+export const deleteSong = function ({commit, state}, song) {
+  let playlist = state.playlist.slice()
+  let sequenceList = state.sequenceList.slice()
+  let currentIndex = state.currentIndex
+  // 查找playlist歌曲的索引
+  let pIndex = findIndex(playlist, song)
+  // 找到后删掉
+  playlist.splice(pIndex, 1)
+
+  // 查找sequenceList歌曲的索引,然后删掉
+  let sIndex = findIndex(sequenceList, song)
+  sequenceList.splice(sIndex, 1)
+
+  // 如果当前播放的歌曲的索引在删除歌曲的索引之后
+  if (currentIndex > pIndex || currentIndex === playlist.length) {
+    currentIndex--
+  }
+
+  commit(types.SET_PLAYLIST, playlist)
+  commit(types.SET_SEQUENCE_LIST, sequenceList)
+  commit(types.SET_CURRENT_INDEX, currentIndex)
+
+  // 如果列表没有歌曲了,播放状态为false
+  if (!playlist.length) {
+    commit(types.SET_PLAYING_STATE, false)
+  }
 }

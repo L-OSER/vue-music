@@ -1,7 +1,7 @@
 <template>
   <transition name="list-fade">
-    <div class="playlist">
-      <div class="list-wrapper">
+    <div class="playlist" v-show="showFlag" @click="hide">
+      <div class="list-wrapper" @click.stop>
         <div class="list-header">
           <h1 class="title">
             <i class="icon"></i>
@@ -9,15 +9,15 @@
             <span class="clear"><i class="icon-clear"></i></span>
           </h1>
         </div>
-        <scroll class="list-content">
+        <scroll ref="listContent" class="list-content" :data="sequenceList">
           <ul>
-            <li class="item">
-              <i class="current" ></i>
-              <span class="text"></span>
+            <li ref="listItem" :key="index" class="item" v-for="(item, index) in sequenceList" @click="selectItem(item, index)">
+              <i class="current" :class="getCurrentIcon(item)"></i>
+              <span class="text">{{item.name}}</span>
               <span class="like">
                 <i></i>
               </span>
-              <span class="delete">
+              <span class="delete" @click.stop="deleteOne(item)">
                 <i class="icon-delete"></i>
               </span>
             </li>
@@ -29,7 +29,7 @@
             <span class="text">添加歌曲到队列</span>
           </div>
         </div>
-        <div class="list-close">
+        <div class="list-close" @click="hide">
           <span>关闭</span>
         </div>
       </div>
@@ -38,16 +38,78 @@
 </template>
 
 <script type="text/ecmascript-6">
+import {mapGetters, mapMutations, mapActions} from 'vuex'
+import {playMode} from 'common/js/config'
 import Scroll from 'base/scroll/scroll'
 
 export default {
   data() {
     return {
+      showFlag: false
     }
   },
   computed: {
+    ...mapGetters([
+      'sequenceList',
+      'currentSong',
+      'mode',
+      'playlist'
+    ])
   },
   methods: {
+    show() {
+      this.showFlag = true
+      setTimeout(() => {
+        this.$refs.listContent.refresh()
+        this.scrollToCurrent(this.currentSong)
+      }, 20)
+    },
+    hide() {
+      this.showFlag = false
+    },
+    // 获取正在播放
+    getCurrentIcon(item) {
+      if (this.currentSong.id === item.id) {
+        return 'icon-play'
+      }
+      return ''
+    },
+    selectItem(item, index) {
+      // 如果是随机播放模式
+      if (this.mode === playMode.random) {
+        index = this.playlist.findIndex((song) => {
+          return song.id === item.id
+        })
+      }
+      this.setCurrentIndex(index)
+      this.setPlayingState = true
+    },
+    // 当选择歌曲播放时,当前歌曲滚动到顶部
+    scrollToCurrent(current) {
+      const index = this.sequenceList.findIndex((song) => {
+        return current.id === song.id
+      })
+      this.$refs.listContent.scrollToElement(this.$refs.listItem[index], 300)
+    },
+    deleteOne(item) {
+      this.deleteSong(item)
+    },
+    ...mapMutations({
+      'setCurrentIndex': 'SET_CURRENT_INDEX',
+      'setPlayingState': 'SET_PLAYING_STATE'
+    }),
+    ...mapActions([
+      'deleteSong'
+    ])
+  },
+  watch: {
+    currentSong(newSong, oldSong) {
+      // 如果当前歌曲和旧歌曲一样或者playlist关闭的时候不做处理
+      if (!this.showFlag || newSong.id === oldSong.id) {
+        return
+      }
+      this.scrollToCurrent(newSong)
+    }
   },
   components: {
     Scroll,
