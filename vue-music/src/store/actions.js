@@ -132,5 +132,7 @@ export const deleteSong = function ({commit, state}, song) {
   // 如果列表没有歌曲了,播放状态为false
   if (!playlist.length) {
     commit(types.SET_PLAYING_STATE, false)
+  } else {
+    commit(types.SET_PLAYING_STATE, true)
   }
 }

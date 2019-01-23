@@ -439,6 +439,10 @@ export default {
   },
   watch: {
     currentSong(newSong, oldSong) {
+      // 如果播放列表没有歌曲了
+      if (!newSong.id) {
+        return
+      }
       if (newSong.id === oldSong.id) {
         return
       }

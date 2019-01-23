@@ -93,6 +93,10 @@ export default {
     },
     deleteOne(item) {
       this.deleteSong(item)
+      // 如果清空歌曲了
+      if (!this.playlist.length) {
+        this.hide()
+      }
     },
     ...mapMutations({
       'setCurrentIndex': 'SET_CURRENT_INDEX',
