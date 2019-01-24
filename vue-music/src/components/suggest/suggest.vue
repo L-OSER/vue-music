@@ -99,7 +99,7 @@ export default {
         // return ''
       }
     },
-    // 跳转二级路由
+    // 跳转二级路由,派发事件
     selectItem(item) {
       // 如果是歌手
       if (item.type === TYPE_SINGER) {
