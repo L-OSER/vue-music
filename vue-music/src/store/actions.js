@@ -134,7 +134,6 @@ export const deleteSong = function ({commit, state}, song) {
   // 如果列表没有歌曲了,播放状态为false
 
   commit(types.SET_PLAYING_STATE, playingState)
-
 }
 
 // 清空播放列表
@@ -143,7 +142,6 @@ export const deleteSongList = function ({commit}) {
   commit(types.SET_SEQUENCE_LIST, [])
   commit(types.SET_CURRENT_INDEX, -1)
   commit(types.SET_PLAYING_STATE, false)
-
 }
 
 // 存储最近播放
