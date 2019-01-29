@@ -45,7 +45,7 @@ export default class Song {
 //   })
 // }
 
-export function createSong(musicData, songVkey,type) {
+export function createSong(musicData, songVkey, type) {
   if (type === 'search') {
     return new Song({
       id: musicData.id,
@@ -55,7 +55,7 @@ export function createSong(musicData, songVkey,type) {
       album: musicData.album,
       duration: musicData.duration,
       image: musicData.image,
-      url: `http://dl.stream.qqmusic.qq.com/C400${musicData.mid}.m4a?vkey=${songVkey}&guid=7981028948&uin=0&fromtag=66`
+      url: `http://dl.stream.qqmusic.qq.com/C400${musicData.mid}.m4a?vkey=${songVkey}&guid=309651137&uin=0&fromtag=66`
     })
   }
   return new Song({
@@ -66,7 +66,7 @@ export function createSong(musicData, songVkey,type) {
     album: musicData.albumname,
     duration: musicData.interval,
     image: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.albummid}.jpg?max_age=2592000`,
-    url: `http://dl.stream.qqmusic.qq.com/C400${musicData.songmid}.m4a?vkey=${songVkey}&guid=7981028948&uin=0&fromtag=66`
+    url: `http://dl.stream.qqmusic.qq.com/C400${musicData.songmid}.m4a?vkey=${songVkey}&guid=309651137&uin=0&fromtag=66`
   })
 }
 

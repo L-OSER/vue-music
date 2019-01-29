@@ -13,17 +13,19 @@
       <div class="shortcut" v-show="!query">
         <switches :switches="switches" :currentIndex="currentIndex" @switch="switchItem"></switches>
         <div class="list-wrapper">
+          <!-- 最近播放 -->
           <scroll ref="songList" class="list-scroll" v-if="currentIndex === 0"
                   :data="playHistory"
-                  beforeScroll="true"
+                  :beforeScroll="beforeScroll"
                   @beforeScroll="blurInput">
             <div class="list-inner">
               <song-list :songs="playHistory" @select="selectSong"></song-list>
             </div>
           </scroll>
+          <!-- 搜索历史 -->
           <scroll ref="searchList" class="list-scroll" v-if="currentIndex === 1"
                   :data="searchHistory"
-                  beforeScroll="true"
+                  :beforeScroll="beforeScroll"
                   @beforeScroll="blurInput">
             <div class="list-inner">
               <search-list @delete="deleteSearchHistory"
@@ -39,7 +41,12 @@
                  @listScroll="blurInput"
         ></suggest>
       </div>
-      <top-tip></top-tip>
+      <top-tip ref="topTip">
+        <div class="tip-title">
+          <i class="icon-ok"></i>
+          <span class="text">1首歌曲已经添加到播放队列</span>
+        </div>
+      </top-tip>
     </div>
   </transition>
 </template>
@@ -66,7 +73,8 @@ export default {
       switches: [
         {name: '最近播放'},
         {name: '搜索历史'}
-      ]
+      ],
+      beforeScroll: true
     }
   },
   computed: {
@@ -90,6 +98,7 @@ export default {
     },
     selectSuggest() {
       this.saveSearch()
+      this.showTip()
     },
     switchItem(index) {
       this.currentIndex = index
@@ -97,7 +106,11 @@ export default {
     selectSong(song, index) {
       if (index !== 0) {
         this.insertSong(new Song(song))
+        this.showTip()
       }
+    },
+    showTip() {
+      this.$refs.topTip.show()
     },
     ...mapActions([
       'insertSong'
