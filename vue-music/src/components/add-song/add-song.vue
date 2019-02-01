@@ -23,7 +23,7 @@
             </div>
           </scroll>
           <!-- 搜索历史 -->
-          <scroll ref="searchList" class="list-scroll" v-if="currentIndex === 1"
+          <scroll :refreshDelay="refreshDelay" ref="searchList" class="list-scroll" v-if="currentIndex === 1"
                   :data="searchHistory"
                   :beforeScroll="beforeScroll"
                   @beforeScroll="blurInput">

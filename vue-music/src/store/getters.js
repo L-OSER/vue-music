@@ -24,6 +24,8 @@ export const searchHistory = state => state.searchHistory
 
 export const playHistory = state => state.playHistory
 
+export const favoriteList = state => state.favoriteList
+
 /*
 ES6标准新增了一种新的函数：Arrow Function（箭头函数）。
 

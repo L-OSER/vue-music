@@ -81,6 +81,8 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       })
       app.get('/api/music', function (req, res) {//这里的路径是给前端发送请求的url
         const url = 'https://c.y.qq.com/base/fcgi-bin/fcg_music_express_mobile3.fcg'
+        // http://183.60.131.110/amobile.music.tc.qq.com/C400002HuRZ4120Ght.m4a?guid=309651137&vkey=1EB659071A547AED4B2853C5F5F2B9CBFE08647599B7C12767B32FF71E6EE5CA4A4EDD9A880FBC54969E7DB04A8926FB9CEACA70E5A4E68C&uin=0&fromtag=66
+        //   http://dl.stream.qqmusic.qq.com/C400002HuRZ4120Ght.m4a?vkey=ED1A21A13F2D546039FB7314C025F0204CA199CE35458C2FE4F18E80DAE17D3DEAE104839786B1F26168F317AA8694BB2954B66E94E9004D&guid=309651137&uin=0&fromtag=66
         // axios发送get请求，可以自己配置config
         axios.get(url, {
           headers: {
